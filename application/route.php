@@ -11,28 +11,41 @@
 
 use think\Route;
 
-Route::rule('/', 'index/Index/index');
+Route::rule('/'                    ,'index/Index/index'                 ,'GET');
+Route::rule('/index'               ,'index/Index/index'                 ,'GET');
 
 // 注册视频播放
-Route::rule('/live/:id', 'index/Index/liveItem');
-Route::rule('/live', 'index/Index/liveAll');
-Route::rule('/live/all', 'index/Index/liveAll');
-Route::rule('/live/all/noplay', 'index/Index/liveAllNoPlay');
+Route::rule('/live/:id'            ,'index/Index/liveItem'              ,'GET');
+Route::rule('/live'                ,'index/Index/liveAll'               ,'GET');
+Route::rule('/live/all'            ,'index/Index/liveAll'               ,'GET');
+Route::rule('/live/all/noplay'     ,'index/Index/liveAllNoPlay'         ,'GET');
+
+// 注册分类相关
+Route::rule('/cate/:id'            ,'index/Index/cateItem'              ,'GET');
+Route::rule('/cate'                ,'index/Index/liveAll'               ,'GET');
 
 // 注册登录忘记密码
-Route::rule('/login', 'index/Login/index');
-Route::rule('/login/work', 'index/Login/loginWork', 'post');
-Route::rule('/regist', 'index/Login/regist');
-Route::rule('/regist/sendcode', 'index/Login/registSendCode', 'post');
-Route::rule('/regist/checkcode', 'index/Login/registCheckCode', 'post');
-Route::rule('/regist/work', 'index/Login/registWork', 'post');
-Route::rule('/login/passwprd', 'index/Login/forgetPassword');
-Route::rule('/login/passwprd/work', 'index/Login/forgetPasswordWork');
-Route::rule('/login/logout', 'index/Login/logout');
+Route::rule('/login'               ,'index/Login/index'                 ,'GET');
+Route::rule('/login/work'          ,'index/Login/loginWork'             ,'POST');
+Route::rule('/regist'              ,'index/Login/regist'                ,'GET');
+Route::rule('/regist/sendcode'     ,'index/Login/registSendCode'        ,'POST');
+Route::rule('/regist/checkcode'    ,'index/Login/registCheckCode'       ,'POST');
+Route::rule('/regist/work'         ,'index/Login/registWork'            ,'POST');
+Route::rule('/login/passwprd'      ,'index/Login/forgetPassword'        ,'GET');
+Route::rule('/login/passwprd/work' ,'index/Login/forgetPasswordWork'    ,'POST');
+Route::rule('/login/logout'        ,'index/Login/logout'                ,'GET');
+
+// 注册用户相关路由
+Route::rule('/user'                ,'index/User/index'                  ,'GET');
+Route::rule('/user/info'           ,'index/User/showInfo'               ,'GET');
+Route::rule('/user/info/edit'      ,'index/User/editInfo'               ,'GET');
+Route::rule('/user/info/edit'      ,'index/User/editInfoWork'           ,'POST');
+Route::rule('/user/collect'        ,'index/User/toggleCollect'          ,'POST');
+Route::rule('/user/mycollection'   ,'index/User/myCollection'           ,'GET');
 
 // 注册直播相关事件回调
-Route::rule('/on_publish', 'index/Rtmp/onPublish'); // 推流输出
-Route::rule('/on_publish_done', 'index/Rtmp/onPublishDone'); // 推流结束
-Route::rule('/on_play', 'index/Rtmp/onPlay'); // 播放
-Route::rule('/on_play_done', 'index/Rtmp/onPlayDone'); // 客户端播放结束
-Route::rule('/ffmpeg_photo', 'index/Rtmp/ffmpegPhoto'); // 截取视频流截图
+Route::rule('/on_publish'          ,'index/Rtmp/onPublish');         // 推流输出
+Route::rule('/on_publish_done'     ,'index/Rtmp/onPublishDone');     // 推流结束
+Route::rule('/on_play'             ,'index/Rtmp/onPlay');           // 播放
+Route::rule('/on_play_done'        ,'index/Rtmp/onPlayDone');       // 客户端播放结束
+Route::rule('/ffmpeg_photo'        ,'index/Rtmp/ffmpegPhoto');      // 截取视频流截图

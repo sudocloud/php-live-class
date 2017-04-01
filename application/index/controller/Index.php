@@ -39,6 +39,7 @@ class Index extends Controller
         } else {
             // 用户没有触发登录条件，因此只要输出一个flag 0 即可
             $this->assign('userLoginFlag', 0);
+            $this->assign('userLoginInfo', NULL);
         }
         /**
          *  获得所有的分类并且输出
@@ -114,8 +115,9 @@ class Index extends Controller
     {
         $id = trim($id);
         // 查询房间信息
+        // 房间的type名称也查出来。
         $dbPrefix = Config::get('database.prefix');
-        $sql = "select user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room where room.guid=? AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user";
+        $sql = "select type.id as typeid ,type.name as type,user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room ,". $dbPrefix. "roomtype as roomtype,". $dbPrefix. "type as type where room.guid=? AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND roomtype.room=room.guid AND type.id=roomtype.type";
         // echo $sql;
         $roomInfo = Db::query($sql, [$id]);
         // 只选择第一条匹配的信息
@@ -129,9 +131,43 @@ class Index extends Controller
         if ($roomInfo['disable'] == 1) {
             $this->error('该房间违反规定已经被封禁', url('/'));
         }
+        // 查询房间订阅人数
+        $roomCollection=Db::name('usercollection')->where(['room'=>$id])->select();
+        // 查看用户是否已经订阅
+        $roomCollectionFlag=0;
+        $login_user=Session::get('loginuser');
+        foreach ($roomCollection as $item){
+            if(in_array($login_user,$item)){
+                $roomCollectionFlag=1;
+                break;
+            }
+        }
+        $this->assign('roomCollecitonFlag',$roomCollectionFlag);
         // 输出房间信息
+        $this->assign('roomCollection',count($roomCollection));
         $this->assign('roomInfo', $roomInfo);
         return $this->fetch();
     }
-
+    /**
+     *  查看某个分类下的所有的直播
+     * @param $id int 分类的id
+     */
+    public function cateItem($id){
+        // 查询分类的信息
+        $cateInfo=Db::name('type')->where(['id'=>$id])->find();
+        if(count($cateInfo)==0){
+            $this->error('该分类不存在');
+        }
+        // 如果分类信息存在则查询相关的直播间
+        // 查询某个分类下所有的直播间在直播的放在前面，不在直播的放在后面
+        $dbPrefix = Config::get('database.prefix');
+        $sql = "select user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room,". $dbPrefix . "roomtype as roomtype where room.guid=roomtype.room AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND roomtype.type=? ORDER BY room.status desc , room.people desc ,room.update_time desc";
+        // $this->assign('sql',$sql);
+        // return $this->fetch();
+        $roomInfo = Db::query($sql, [$cateInfo['id']]);
+        // 输出信息
+        $this->assign('cateInfo',$cateInfo);
+        $this->assign('roomInfo', $roomInfo);
+        return $this->fetch();
+    }
 }

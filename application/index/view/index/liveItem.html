@@ -37,7 +37,10 @@
                 <div class="am-u-md-12 am-u-lg-12 room-title-desc-content no-padding-right">
                     <div class="am-u-md-6 am-u-lg-6 title-span-bottom room-title-desc-content">
                         <span class="room-title-desc">{$roomInfo.nickname}</span>
-                        <span class="room-title-desc">房间号：{$roomInfo.guid}</span>
+                        <span class="room-title-desc">
+                            房间号：{$roomInfo.guid} -
+                            <a href="{:url('/',['cate'=>$roomInfo.typeid])}" class="am-text-warning ">{$roomInfo.type}</a>
+                        </span>
                         <span class="room-title-desc">人气：{$roomInfo.people}</span>
                     </div>
                     <div class="am-u-md-6 am-u-lg-6  am-text-right no-padding-right">
@@ -45,10 +48,23 @@
                             <span class="am-icon-user-md"></span>
                             <span>举报</span>
                         </button>
-                        <button class="am-btn am-btn-default">
-                            <span class="am-icon-users"></span>
-                            <span>订阅：</span>
-                        </button>
+                        {if condition="$userLoginFlag eq 0"}
+                                <a class="am-btn am-btn-default" href="{:url('/login')}">
+                                    <span>收藏：{$roomCollection}</span>
+                                </a>
+                        {else/}
+                            {if condition="$roomCollecitonFlag eq 0" }
+                                <button class="am-btn am-btn-default" onclick="toggleCollectionRoom(this)" room="{$roomInfo.guid}" collection="{$roomCollecitonFlag}">
+                                    <span id="roomCollectionFont">收藏：{$roomCollection}</span>
+                                </button>
+                            {else /}
+                                <button class="am-btn am-btn-warning"onclick="toggleCollectionRoom(this)" room="{$roomInfo.guid}"collection="{$roomCollecitonFlag}">
+                                    <span id="roomCollectionFont">已收藏：{$roomCollection}</span>
+                                </button>
+                            {/if}
+
+                        {/if}
+
                     </div>
                 </div>
             </div>
@@ -58,7 +74,8 @@
                 视频播放器加载中，请稍后...</b></div>
             <!--cuplayer /代码开始-->
             <script type="text/javascript" src="__STATIC__/cuplayer/js/swfobject.js"></script>
-            <script type="text/javascript">
+            {if condition="$roomInfo.status eq 1"}
+              <script type="text/javascript">
                 var rtmpApp = "__RTMP_URL__";
                 var stream = "{$roomInfo.guid}";
                 var title = "{$roomInfo.name}";
@@ -77,11 +94,37 @@
                 so.addVariable("JcScpVideoPath", stream); //直播流名称
 
                 so.addVariable("JcScpAutoPlay", "yes"); //是否自动播放
-                // so.addVariable("JcScpImg","images/startpic.jpg"); //视频缩略图
+                so.addVariable("JcScpImg","__STATIC__/images/live/{$roomInfo.guid}.png"); //视频缩略图
                 //-----------------------------------------
                 so.addVariable("JcScpSharetitle", title); //视频标题
                 so.write("CuPlayer");
             </script>
+            {else /}
+              <script type="text/javascript">
+                var rtmpApp = "__RTMP_URL__";
+                var stream = "{$roomInfo.guid}";
+                var title = "{$roomInfo.name}";
+                var staticUrl = "__STATIC__/cuplayer/";
+                var so = new SWFObject(staticUrl + "player.swf", "myCuPlayer", "100%", "600", "9", "#000000");
+                so.addParam("allowfullscreen", "true");
+                so.addParam("allowscriptaccess", "always");
+                so.addParam("wmode", "opaque");
+                so.addParam("quality", "high");
+                so.addParam("salign", "lt");
+                //播放器设置文件-----------------------------
+                so.addVariable("JcScpFile", staticUrl + "CuSunV4setLive.xml"); //配置文件
+                //视频文件及略缩图--------------------------
+                /* 以下这行仅为rtmp直播时写法示例，直播信号是关的，请对应换成你自己的直播流使用 */
+                so.addVariable("JcScpServer", rtmpApp); //流媒体服务器
+                so.addVariable("JcScpVideoPath", stream); //直播流名称
+
+                so.addVariable("JcScpAutoPlay", "no"); //是否自动播放
+                so.addVariable("JcScpImg","__STATIC__/images/play_bg.jpg"); //视频缩略图
+                //-----------------------------------------
+                so.addVariable("JcScpSharetitle", title); //视频标题
+                so.write("CuPlayer");
+            </script>
+            {/if}
             <!--cuplayer/代码结束-->
         </div>
 
@@ -120,5 +163,49 @@
 </div>
 
 <!--right box end-->
+<script>
+    function toggleCollectionRoom(obj){
+        var guid="{$roomInfo.guid}",
+            loginUser="{$userLoginInfo.guid}",
+            roomUser="{$roomInfo.uid}",
+            url="{:url('/user/collect')}",
+            userCollectionFlag=Number($(obj).attr("collection"));
+        if(loginUser==roomUser){
+            $("#alertTitle").text("不能收藏自己");
+            $("#alertBox").modal({'width':'300px'});
+            return false;
+        }
+        $.ajax({
+            url:url,
+            type:'post',
+            dataType:'json',
+            data:'room='+guid,
+            success:function(data){
+                if(data.status==1){
+                    // 如果操作是取消收藏
+                    console.log(userCollectionFlag);
+                    if(userCollectionFlag==1){
+                        $(obj).attr('collection',0);
+                        $(obj).removeClass('am-btn-warning');
+                        $(obj).addClass('am-btn-default');
+                        $("#roomCollectionFont").text("收藏："+data.data.number);
+                        return false;
+                    }else{
+                        // 如果用户是添加收藏
+                        $(obj).attr('collection',1);
+                        $(obj).removeClass('am-btn-default');
+                        $(obj).addClass('am-btn-warning');
+                        $("#roomCollectionFont").text("已收藏："+data.data.number);
+                        return false;
+                    }
+                }else{
+                    $("#alertTitle").text(data.msg);
+                    $("#alertBox").modal({'width':'300px'});
+                    return false;
+                }
+            }
+        });
+    }
+</script>
 {/block}
 {/extend}
