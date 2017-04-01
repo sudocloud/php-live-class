@@ -82,6 +82,7 @@ class Index extends Controller
      *  所有的直播房间
      */
     public function liveALl()
+
     {
         // 查询数据库中所有在直播的房间
         // 根据直播的时间进行逆序排序 —— update_time

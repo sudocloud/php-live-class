@@ -246,9 +246,9 @@ return [
     // APP 配置项目
     'wangyi' => [
         // APP KEY
-        'appkey' => '6c07533ca57b9bf35bba8ed9b06a31d0',
+        'appkey' => 'xxxxx',
         // APP SECRET
-        'appsecret' => '8'
+        'appsecret' => 'xxxxxxxx'
     ],
     // +----------------------------------------------------------------------
     // | 应用设置
@@ -277,11 +277,4 @@ return [
          */
         'photoPos' => '/data/wwwroot/default/public/static/images/live',//
     ],
-    // APP 配置项目
-    'wangyi' => [
-        // APP KEY
-        'appkey' => '6c07533ca57b9bf35bba8ed9b06a31d0',
-        // APP SECRET
-        'appsecret' => '89bc1277ece0'
-    ]
 ];
