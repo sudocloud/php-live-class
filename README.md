@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ThinkPHP 5.0
 ===============
 
@@ -127,3 +128,7 @@ All rights reserved。
 ThinkPHP® 商标和著作权所有者为上海顶想信息科技有限公司。
 
 更多细节参阅 [LICENSE.txt](LICENSE.txt)
+=======
+# php-live-class
+Live class based on nginx-rtmp-module. developed by thinkphp5
+>>>>>>> 427dcc09854f5d0a2a414098d6e0a019b9c823a6
