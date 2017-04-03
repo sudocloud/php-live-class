@@ -17,6 +17,10 @@ class ComposerStaticInit6ff6220ba1e94a5d15340134dea70848
             'think\\captcha\\' => 14,
             'think\\' => 6,
         ),
+        'L' => 
+        array (
+            'Lcobucci\\JWT\\' => 13,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -31,6 +35,10 @@ class ComposerStaticInit6ff6220ba1e94a5d15340134dea70848
         'think\\' => 
         array (
             0 => __DIR__ . '/../..' . '/thinkphp/library/think',
+        ),
+        'Lcobucci\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
         ),
     );
 
