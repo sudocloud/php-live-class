@@ -16,4 +16,8 @@
 [3]: http://www.ptbird.cn/rtmp-nginx-module-status-and-people.html
 [4]:http://www.ptbird.cn/php-ffmpeg-rtmp-photo.html
 
+<<<<<<< HEAD
 ##### 目前还在开发中... 2017-04-07.：
+=======
+##### 目前还在开发中... 2017-04-07.：
+>>>>>>> 7eb61c3f9e928779cff5df088cf0f466ad15ac7d
