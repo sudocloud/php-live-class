@@ -1,10 +1,10 @@
 {extend name="base_front_item"}
-{block name="title"}{$cateInfo.name}{/block}
+{block name="title"}{$userLoginInfo.nickname}的收藏{/block}
 {block name="content"}
 <div class="room-middle-box" style="padding-top: 40px;">
     <div class=" am-u-md-12 am-u-lg-12　">
         <div class="am-u-md-4 am-u-md-4 am-u-sm-6 ">
-            <h1>{$cateInfo.name}  <span class="am-badge am-round am-text-lg">{$roomInfo|count}</span></h1>
+            <h1>{$userLoginInfo.nickname} 的收藏  <span class="am-badge am-round am-text-lg">{$roomInfo|count}</span></h1>
         </div>
         <div class="am-u-lg-8 am-u-md-8 am-u-sm-6 head-nav-btn">
             <a href="javascript:void(0);" class=" am-btn am-btn-default am-btn-warning" onclick="togglePlayRoom(this,2);">全部</a>

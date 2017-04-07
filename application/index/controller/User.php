@@ -13,6 +13,7 @@ use think\Db;
 use think\Request;
 use think\Session;
 use think\Config;
+use think\Cache;
 
 class User extends Controller{
     /**
@@ -20,12 +21,30 @@ class User extends Controller{
      *   - 请求session用户数据
      *   - 存在执行操作，不存在引导登录
      */
-    public function _initialize(){
+    public function _initialize()
+    {
         // 获取登录状态信息
         $guid = Session::get('loginuser');
         $logincheck = Session::get('logincheck');
         $checkCode = md5($guid . Config::get('login.flag'));
-        if($checkCode !=$logincheck){
+        if ($checkCode == $logincheck) {
+            // 用户登录成功
+            // 从缓存中读取用户的信息
+            $userInfo = Cache::get($guid);
+            if (!$userInfo) {
+                // 未设置缓存，从数据库中查询数据并写入缓存
+                $resInfo = Db::name('user')->where(['guid' => $guid])->find();
+                if (count($resInfo) > 0) {
+                    Cache::set($guid, $resInfo);
+                }
+                $userInfo = $resInfo;
+            }
+            // 上面只要用户登录 就确定查出了用户信息
+            // 然后输出到前台，并且输出一个flag
+            $this->assign('userLoginInfo', $userInfo);
+            // dump($userInfo);
+            $this->assign('userLoginFlag', 1);
+        } else {
             //如果是ajax请求，不应该跳转，应当返回错误值
             if (Request::instance()->isAjax()){
                 $data=[
@@ -38,11 +57,232 @@ class User extends Controller{
                 $this->redirect(url('/login'));
             }
         }
+        /**
+         *  获得所有的分类并且输出
+         *  - 查询缓存中是否存在分类信息，如果存在则直接获取
+         *  - 缓存中不存在分类信息，则从数据库读取所有的分类，然后加入缓存
+         *  - 向所有的页面输出缓存中的分类信息
+         */
+        $roomTypeInfo=Cache::get('roomTypeInfo');
+        if(!$roomTypeInfo){
+            // 从数据库中读取相关的分类信息并写入缓存
+            $roomTypeInfoRes=Db::name('type')->select();
+            Cache::set('roomTypeInfo',$roomTypeInfoRes);
+            $roomTypeInfo=$roomTypeInfoRes;
+        }
+        // 目前roomTypeInfo已经确认存在
+        // 向所有页面输出
+        $this->assign('roomTypeInfo',$roomTypeInfo);
+
+        return false;
     }
     public function index(){
 
     }
+    /**
+     * 显示用户的信息
+     * @return mixed
+     */
+    public function showInfo(){
+        // 用户的信息可以从缓存中获得 不需要查询数据库
 
+        // 查询用户是否是主播
+        $guid=Session::get('loginuser');
+        $zhuboInfo=Db::name('userzhubo')->where(['user'=>$guid])->find();
+        if(count($zhuboInfo)==0){
+            $userZhuBoFlag=0;
+            $userRoomInfo=[];
+        }else{
+            $userZhuBoFlag=1;
+            $userRoomInfo=Db::name('room')->where(['guid'=>$zhuboInfo['room']])->find();
+            $userPassword=Db::name('user')->where(['guid'=>$guid])->field('password')->find();
+            // 生成流密钥
+            $userRoomInfo['roomPassword']=$userRoomInfo['guid']."?pass=".md5($userPassword['password']);
+        }
+        $this->assign('userZhuBoFlag',$userZhuBoFlag);
+        // 如果主播,则查询出房间的信息
+        $this->assign('userRoomInfo',$userRoomInfo);
+        return $this->fetch();
+     }
+    /**
+     *  修改用户信息
+     *  - post nickname=nickanme usersex=usersex
+     */
+     public function editInfo(Request $request){
+         $nickname=trim($request->param('nickname','post'));
+         $sex=(int)trim($request->param('usersex','post'));
+         if($sex !=0 && $sex!=1 && $sex!=2){
+             $sex=0;
+         }
+         if(strlen($nickname)==0){
+             Session::flash('err_msg','不能为空');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 写入数据库并且更新缓存
+         $dataArr=[
+            'sex'=>$sex,
+             'nickname'=>$nickname
+         ];
+         $guid=Session::get('loginuser');
+         if(Db::name('user')->where(['guid'=>$guid])->update($dataArr)){
+             $userInfo = Cache::get($guid);
+             $userInfo['nickname']=$nickname;
+             $userInfo['sex']=$sex;
+             Cache::set($guid,$userInfo);
+             Session::flash('err_msg','修改成功');
+             Session::flash('err_code',0);
+             $this->redirect(url('/user'));
+         }else{
+             Session::flash('err_msg','修改失败或未发生修改');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+     }
+
+    /**
+     * 修改密码
+     * - post | password newpassword againpassword
+     */
+     public function editPassword(Request $request){
+        // 获取参数
+         $password=trim($request->param('password','post'));
+         $newPassword=trim($request->param('newpassword','post'));
+         $againPassword=trim($request->param('againpassword','post'));
+        if(strlen($password)==0 || strlen($newPassword)==0 || strlen($againPassword)==0 ){
+            Session::flash('err_msg','不能为空');
+            Session::flash('err_code',1);
+            $this->redirect(url('/user'));
+        }
+         if($newPassword != $againPassword){
+             Session::flash('err_msg','两次密码不匹配');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 数据库中查出旧密码
+         $guid=Session::get('loginuser');
+         $oldPasswordArr=Db::name('user')->where(['guid'=>$guid])->field('password')->find();
+         $oldPassword=$oldPasswordArr['password'];
+         // 匹配旧密码
+         if($oldPassword!=md5($password)){
+             Session::flash('err_msg','旧密码验证错误');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 不能使用之前的密码
+         if($password==$newPassword){
+             Session::flash('err_msg','新旧密码应当不同');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 验证成功 写入新密码
+         // 新密码进行md5加密
+         $newPassword=md5($newPassword);
+         $dataArr=[
+             'password'=>$newPassword
+         ];
+         if(Db::name('user')->where(['guid'=>$guid])->setField($dataArr)){
+             Session::flash('err_msg','修改成功,下次生效');
+             Session::flash('err_code',0);
+             $this->redirect(url('/user'));
+         }else{
+             Session::flash('err_msg','修改失败或者无修改');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+     }
+
+    /**
+     * 修改房间的信息
+     *  - post | name,notice,description
+     */
+     public function editRoom(Request $request){
+         $name=trim($request->param('name','post'));
+         $notice=trim($request->param('notice','post'));
+         $description=trim($request->param('description','post'));
+         // 不能为空
+         if(strlen($name) == 0 || strlen($notice) == 0 || strlen($description) == 0){
+             Session::flash('err_msg','不能为空');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 修改数据库
+         // 从数据库中查出当前登录用户的房间号
+         $guid=Db::name('userzhubo')->where(['user'=>Session::get('loginuser')])->field('room')->find();
+         $guid=$guid['room'];
+         // 修改新信息
+         $dataArr=[
+             'name'=>$name,
+             'notice'=>$notice,
+             'description'=>$description
+         ];
+         if(Db::name('room')->where(['guid'=>$guid])->update($dataArr)){
+             Session::flash('err_msg','修改成功');
+             Session::flash('err_code',0);
+             $this->redirect(url('/user'));
+         }else{
+             Session::flash('err_msg','修改失败或者无修改');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+     }
+    /**
+     *  主播验证申请
+     *  - post |
+     */
+    public function zhuboCheck(){
+        // 获取guid
+        $guid=Session::get('loginuser');
+        // 验证用户是否已经是主播
+        // 是主播意味着已经提交了验证,否则就是没有提交验证或者正在验证期间
+        $zhuboInfo=Db::name('userzhubo')->where(['user'=>$guid])->count();
+        if($zhuboInfo!=0){
+            Session::flash('err_msg','已经认证,不能再次认证');
+            Session::flash('err_code',1);
+            $this->redirect(url('/user'));
+        }
+        // 查询是否提交过验证
+        $checkInfo=Db::name('userzhubocheck')->where(['user'=>$guid])->count();
+        if($checkInfo!=0){
+            Session::flash('err_msg','已经提交过认证申请,请耐心等待');
+            Session::flash('err_code',1);
+            $this->redirect(url('/user'));
+        }
+        // 没有提交过,数据表添加字段
+        $time=time();
+        $dataArr=[
+            'user'=>$guid,
+            'create_time'=>$time,
+            'update_time'=>$time,
+        ];
+        if(Db::name('userzhubocheck')->insert($dataArr)){
+            Session::flash('err_msg','成功提交认证申请,我们会尽快通过手机联系您!');
+            Session::flash('err_code',0);
+            $this->redirect(url('/user'));
+        }else{
+            Session::flash('err_msg','提交失败,请稍后重试');
+            Session::flash('err_code',1);
+            $this->redirect(url('/user'));
+        }
+
+    }
+    /**
+     * 用户的收藏列表
+     *
+     */
+    public function myCollection(){
+        // 根据usercollect user room 三张表查询
+        $guid=Session::get('loginuser');
+        // 查出房间的信息和房间主播的信息
+        $dbPrefix = Config::get('database.prefix');
+        $sql = "select user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room,". $dbPrefix . "usercollection as usercollection where room.guid=usercollection.room AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND usercollection.user=? ORDER BY room.status desc , room.people desc ,room.update_time desc";
+        // $this->assign('sql',$sql);
+        // return $this->fetch();
+        $roomInfo = Db::query($sql, [$guid]);
+        // 输出信息
+        $this->assign('roomInfo', $roomInfo);
+        return $this->fetch();
+    }
     /**
      * 添加或者删除用户收藏的函数
      *  - post请求 参数为 room = guid

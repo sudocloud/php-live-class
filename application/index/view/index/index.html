@@ -71,7 +71,11 @@
                               <a href="{:url('/',['live'=>$top.guid])}" class="am-text-truncate">{$top.name}</a>
                          </span>
                         <span class="am-fr">
-                              <span class="am-badge ">{$top.number}</span>
+                              {if condition="$top.status eq 0"}
+                                    <span class="am-badge ">{$top.number}</span>
+                              {else /}
+                                    <span class="am-badge am-badge-success">{$top.number}</span>
+                              {/if}
                          </span>
                     </div>
                 {/volist}

@@ -1,5 +1,9 @@
 /*导航栏样式*/
 /*滚动条样式 开始*/
+.error-msg-alert{
+    z-index: 999;
+    text-align: center;
+}
 html body::-webkit-scrollbar-track
 {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -409,3 +413,31 @@ html body::-webkit-scrollbar-thumb
 }
 
 /**登录界面的css end**/
+
+
+/**用户信息资料的 css start **/
+.user-info-content{
+    padding-bottom: 20px;
+}
+.user-info-content .logo-content{
+    margin-bottom:30px;
+}
+.user-info-content .am-tabs-d2{
+    box-shadow: 0 1px 5px #dfdfdf;
+}
+.user-edit-content{
+    border-left: 2px #dfdfdf dashed;
+}
+.user-edit-content .am-tabs-d2 .am-tabs-nav .am-active{
+    background-color: #eeeeee;
+}
+.user-room-content {
+    margin-bottom: 20px;
+}
+.user-room-content .am-text-danger{
+    cursor: pointer;
+}
+.user-room-content .room-info-form{
+    box-shadow: 0 0 3px #dfdfdf;
+}
+/**用户信息资料的 css end **/

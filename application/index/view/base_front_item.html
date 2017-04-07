@@ -27,6 +27,22 @@
 
 </head>
 <body style="background-color: #F6F6F6">
+<div class="am-u-md-12 error-msg-alert">
+    {if condition="$Think.session.err_msg neq '' "}
+    {if condition="$Think.session.err_code eq 0 "}
+    <div class="am-alert am-animation-slide-top top-info-alert-box" data-am-alert>
+        <button type="button" class="am-close">&times;</button>
+        <p> {$Think.session.err_msg}</p>
+    </div>
+    {/if}
+    {if condition="$Think.session.err_code eq 1 "}
+    <div class="am-alert am-animation-slide-top top-info-alert-box am-alert-danger" data-am-alert>
+        <button type="button" class="am-close">&times;</button>
+        <p> {$Think.session.err_msg}</p>
+    </div>
+    {/if}
+    {/if}
+</div>
 <!--Common like alert-->
 <div class="am-modal am-modal-alert" tabindex="-1" id="alertBox">
     <div class="am-modal-dialog">
@@ -71,12 +87,12 @@
               <img src="__STATIC__/images/headimgurl/{$userLoginInfo.headimgurl}" alt="{$userLoginInfo.nickname}" class="user-logo am-circle">
               <span>{$userLoginInfo.nickname}</span>
               <div class="am-fr">
-                  <a href="" class="am-text-warning"><span class="am-icon-cog "></span></a><br>
+                  <a href="{:url('/user')}" class="am-text-warning"><span class="am-icon-cog "></span></a><br>
                   <a href="{:url('/login/logout')}" class=""><span class="am-icon-power-off "></span></a>
               </div>
           </div>
         <div class=" left-user-logo user-btn-box am-u-sm-6 am-text-center">
-            <a href="" class="am-btn am-btn-warning am-btn-sm user-link ">我的订阅</a>
+            <a href="{:url('/user/mycollection')}" class="am-btn am-btn-warning am-btn-sm user-link ">我的收藏</a>
         </div>
         <div class="left-user-logo user-btn-box am-text-center am-u-sm-6">
             <a href="" class="am-btn am-btn-warning am-btn-sm user-link ">观看历史</a>
@@ -89,7 +105,6 @@
     </div>
 </div>
 {block name="content"}{/block}
-
 
 <script src="__STATIC__/amazeui/js/amazeui.min.js"></script>
 <script>

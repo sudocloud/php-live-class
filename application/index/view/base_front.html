@@ -52,7 +52,7 @@
                         <img src="__STATIC__/images/headimgurl/{$userLoginInfo.headimgurl}" alt="" class="am-circle hvr-float-shadow" height="50px" width="50px">
                     </a>
                     <ul class="am-dropdown-content" style="padding: 10px;">
-                        <li class="am-animation-slide-top"><a href="#"><span class="am-icon-edit"></span> 我的资料</a></li>
+                        <li class="am-animation-slide-top"><a href="{:url('/user')}"><span class="am-icon-edit"></span> 我的资料</a></li>
                         <li class="am-animation-slide-top"><a href="{:url('/login/logout')}"><span class="am-icon-power-off am-text-danger" ></span><span class="am-text-danger"> 退出登录</span></a></li>
                     </ul>
                     {else/}
@@ -69,6 +69,27 @@
 
 {block name="content"}{/block}
 
+<footer class="am-footer am-footer-default"
+       >
+    <div class="am-footer-switch">
+    <span class="am-footer-ysp" data-rel="mobile">
+        <a  href="javascript:;">
+          直播课堂
+        </a>
+    </span>
+        <span class="am-footer-divider"> | </span>
+        <a  href="javascript:;">
+            <span class="am-text-warning">
+                Live Class
+            </span>
+        </a>
+    </div>
+    <div class="am-footer-miscs ">
+        <p>Powered by 钱敏玥</p>
+        <p>Copyright©2017.</p>
+        <p>XICP备XXXXX号</p>
+    </div>
+</footer>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script src="__STATIC__/amazeui/js/jquery.min.js"></script>
 <!--<![endif]-->
