@@ -19,6 +19,7 @@ Route::rule('/live/:id'            ,'index/Index/liveItem'              ,'GET');
 Route::rule('/live'                ,'index/Index/liveAll'               ,'GET');
 Route::rule('/live/all'            ,'index/Index/liveAll'               ,'GET');
 Route::rule('/live/all/noplay'     ,'index/Index/liveAllNoPlay'         ,'GET');
+Route::rule('/live/search'         ,'index/Index/searchRoom'            ,'POST');
 
 // 注册分类相关
 Route::rule('/cate/:id'            ,'index/Index/cateItem'              ,'GET');
@@ -42,7 +43,10 @@ Route::rule('/user/edit'           ,'index/User/editInfo'               ,'POST')
 Route::rule('/user/password'       ,'index/User/editPassword'           ,'POST');
 Route::rule('/user/collect'        ,'index/User/toggleCollect'          ,'POST');
 Route::rule('/user/mycollection'   ,'index/User/myCollection'           ,'GET');
-Route::rule('/user/zhubo'          ,'index/User/zhuboCheck'               ,'POST');
+Route::rule('/user/myhistory'      ,'index/User/myHistory'              ,'GET');
+Route::rule('/user/zhubo'          ,'index/User/zhuboCheck'             ,'POST');
+Route::rule('/user/room/edit'      ,'index/User/editRoom'               ,'POST');
+Route::rule('/user/room/image'     ,'index/User/editRoomImage'          ,'POST');
 
 // 注册直播相关事件回调
 Route::rule('/on_publish'          ,'index/Rtmp/onPublish');         // 推流输出

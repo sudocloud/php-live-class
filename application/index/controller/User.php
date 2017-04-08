@@ -89,19 +89,32 @@ class User extends Controller{
         // 查询用户是否是主播
         $guid=Session::get('loginuser');
         $zhuboInfo=Db::name('userzhubo')->where(['user'=>$guid])->find();
+        $userCheckFlag=0;
+        $userCheckInfo=[];
         if(count($zhuboInfo)==0){
             $userZhuBoFlag=0;
             $userRoomInfo=[];
+            // 不是主播查询是否提交过申请
+            $userCheckInfo=Db::name('userzhubocheck')->where(['user'=>$guid])->find();
+            if(count($userCheckInfo)>0){
+                $userCheckInfo['update_time']=date('Y-m-d H:i:s',$userCheckInfo['update_time']);
+                $userCheckFlag=1;
+            }else{
+                $userCheckFlag=0;
+            }
         }else{
             $userZhuBoFlag=1;
             $userRoomInfo=Db::name('room')->where(['guid'=>$zhuboInfo['room']])->find();
             $userPassword=Db::name('user')->where(['guid'=>$guid])->field('password')->find();
             // 生成流密钥
-            $userRoomInfo['roomPassword']=$userRoomInfo['guid']."?pass=".md5($userPassword['password']);
+            $userRoomInfo['roomPassword']=$userRoomInfo['guid']."?pass=".md5($userRoomInfo['guid'].$userPassword['password']);
         }
         $this->assign('userZhuBoFlag',$userZhuBoFlag);
         // 如果主播,则查询出房间的信息
         $this->assign('userRoomInfo',$userRoomInfo);
+        // 不是主播,输出查询过的房间
+        $this->assign('userCheckInfo',$userCheckInfo);
+        $this->assign('userCheckFlag',$userCheckFlag);
         return $this->fetch();
      }
     /**
@@ -226,6 +239,47 @@ class User extends Controller{
              $this->redirect(url('/user'));
          }
      }
+
+     public function editRoomImage(){
+         // 获取表单上传文件 例如上传了001.jpg
+         $file = request()->file('roomimage');
+         if($file===NULL){
+             // 上传失败获取错误信息
+             Session::flash('err_msg','必须选择一张图片');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 移动到框架应用根目录/public/uploads/ 目录下
+         $info = $file->validate(['size'=>2097152,'ext'=>'jpg,png,jpeg'])->move(ROOT_PATH . 'public' . DS . 'static/images/room/');
+         $saveName='dc6068e5-48c4-4611-a504-df4b652683de.jpg';
+         if($info){
+             // 成功上传后 获取上传信息
+             // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
+             $saveName=$info->getSaveName();
+         }else{
+             // 上传失败获取错误信息
+             $uploadErr= $file->getError();
+             Session::flash('err_msg',$uploadErr);
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+         // 写入数据库
+         // 从数据库中查出当前登录用户的房间号
+         $guid=Db::name('userzhubo')->where(['user'=>Session::get('loginuser')])->field('room')->find();
+         $guid=$guid['room'];
+         if(Db::name('room')->where(['guid'=>$guid])->setField('bgimgurl',$saveName)){
+// 上传失败获取错误信息
+             Session::flash('err_msg','成功修改封面');
+             Session::flash('err_code',0);
+             $this->redirect(url('/user'));
+         }else{
+             // 上传失败获取错误信息
+             $uploadErr= $file->getError();
+             Session::flash('err_msg','修改封面失败,请重试.');
+             Session::flash('err_code',1);
+             $this->redirect(url('/user'));
+         }
+     }
     /**
      *  主播验证申请
      *  - post |
@@ -233,6 +287,28 @@ class User extends Controller{
     public function zhuboCheck(){
         // 获取guid
         $guid=Session::get('loginuser');
+        // 获取表单上传文件 例如上传了001.jpg
+        $file = request()->file('image');
+        if($file===NULL){
+            // 上传失败获取错误信息
+            Session::flash('err_msg','必须选择一张图片');
+            Session::flash('err_code',1);
+            $this->redirect(url('/user'));
+        }
+        // 移动到框架应用根目录/public/uploads/ 目录下
+        $info = $file->validate(['size'=>2097152,'ext'=>'jpg,png,jpeg'])->move(ROOT_PATH . 'public' . DS . 'static/images/teacher/');
+        $saveName='demo.png';
+        if($info){
+            // 成功上传后 获取上传信息
+            // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
+            $saveName=$info->getSaveName();
+        }else{
+            // 上传失败获取错误信息
+            $uploadErr= $file->getError();
+            Session::flash('err_msg',$uploadErr);
+            Session::flash('err_code',1);
+            $this->redirect(url('/user'));
+        }
         // 验证用户是否已经是主播
         // 是主播意味着已经提交了验证,否则就是没有提交验证或者正在验证期间
         $zhuboInfo=Db::name('userzhubo')->where(['user'=>$guid])->count();
@@ -252,6 +328,7 @@ class User extends Controller{
         $time=time();
         $dataArr=[
             'user'=>$guid,
+            'image'=>$saveName,
             'create_time'=>$time,
             'update_time'=>$time,
         ];
@@ -276,6 +353,24 @@ class User extends Controller{
         // 查出房间的信息和房间主播的信息
         $dbPrefix = Config::get('database.prefix');
         $sql = "select user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room,". $dbPrefix . "usercollection as usercollection where room.guid=usercollection.room AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND usercollection.user=? ORDER BY room.status desc , room.people desc ,room.update_time desc";
+        // $this->assign('sql',$sql);
+        // return $this->fetch();
+        $roomInfo = Db::query($sql, [$guid]);
+        // 输出信息
+        $this->assign('roomInfo', $roomInfo);
+        return $this->fetch();
+    }
+
+    /**
+     * 用户的观看历史列表
+     *   和收藏其实差不多 只不过中间表不一样
+     */
+    public function myHistory(){
+        // 根据userhistory user room 三张表查询
+        $guid=Session::get('loginuser');
+        // 查出房间的信息和房间主播的信息
+        $dbPrefix = Config::get('database.prefix');
+        $sql = "select user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room,". $dbPrefix . "userhistory as userhistory where room.guid=userhistory.room AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND userhistory.user=? ORDER BY room.status desc , room.people desc ,room.update_time desc";
         // $this->assign('sql',$sql);
         // return $this->fetch();
         $roomInfo = Db::query($sql, [$guid]);

@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="am-u-md-8 ">
-            <div data-am-widget="tabs" class="am-tabs am-tabs-d2" style="">
+            <div data-am-widget="tabs" class="am-tabs am-tabs-default" style="">
                 <ul class="am-tabs-nav am-cf">
                     <li class="am-active"><a href="[data-tab-panel-0]">编辑资料</a></li>
                     <li class=""><a href="[data-tab-panel-1]">修改密码</a></li>
@@ -93,7 +93,7 @@
         <hr data-am-widget="divider" style="" class="am-divider am-divider-dotted" />
         <div class="am-u-md-12  am-u-sm-12 ">
             <h1 class="am-u-md-6">
-                <span class="am-text-warning">{$userLoginInfo.nickname}</span> <span class="am-text-default">的房间信息</span>
+                <span class="am-text-warning">{$userLoginInfo.nickname}</span> <span class="am-text-default">的课堂信息</span>
             </h1>
         </div>
         <div class="am-u-md-12">
@@ -104,29 +104,58 @@
                 <input type="text"  readonly value="__RTMP_URL__" class="am-form-field">
                 <span  class="am-text-sm am-text-danger" onclick="toggleRoomPassword();">流密钥 : <span class="am-icon-eye " ></span></span>
                 <input type="password"  readonly value="{$userRoomInfo.roomPassword}" class="am-form-field" id="roomPassword">
+                <span class="am-block am-text-sm">课堂封面:</span>
+                <img src="__STATIC__/images/room/{$userRoomInfo['bgimgurl']}" alt="" width="300px" class="am-center">
             </div>
-            <div class="am-u-md-6 room-info-form">
-                <span class="am-text-sm ">房间资料:</span>
+            <div class="am-u-md-6 ">
+                <span class="am-text-sm ">课堂资料修改:</span>
                 <hr>
-                <div class="">
-                    <form action="{:url('/user/room/edit')}"method="post" class="am-form">
-                        <div class=" am-form-group-sm">
-                            <label for="" class="am-text-sm">房间名:</label>
-                            <input type="text" name="name" class="am-input-sm" value="{$userRoomInfo.name}">
+                <div data-am-widget="tabs"
+                     class="am-tabs am-tabs-default">
+                    <ul class="am-tabs-nav am-cf">
+                        <li class="am-active"><a href="[data-tab-panel-0]">课堂信息</a></li>
+                        <li class=""><a href="[data-tab-panel-1]">课堂封面</a></li>
+                    </ul>
+                    <div class="am-tabs-bd">
+                        <div data-tab-panel-0 class="am-tab-panel am-active">
+                            <div class="">
+                                <form action="{:url('/user/room/edit')}"method="post" class="am-form">
+                                    <div class=" am-form-group-sm">
+                                        <label for="" class="am-text-sm">房间名:</label>
+                                        <input type="text" name="name" class="am-input-sm" value="{$userRoomInfo.name}">
+                                    </div>
+                                    <div class=" am-form-group-sm">
+                                        <label for="" class="am-text-sm">通知:</label>
+                                        <textarea  name="notice" class="am-input-sm">{$userRoomInfo.notice}</textarea>
+                                    </div>
+                                    <div class=" am-form-group">
+                                        <label for="" class="am-text-sm">描述:</label>
+                                        <textarea  name="description" class="am-input-sm">{$userRoomInfo.description}</textarea>
+                                    </div>
+                                    <div class=" am-form-group am-text-right">
+                                        <button type="submit" class="am-btn am-btn-warning am-btn-sm">修改</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class=" am-form-group-sm">
-                            <label for="" class="am-text-sm">通知:</label>
-                            <textarea  name="notice" class="am-input-sm">{$userRoomInfo.notice}</textarea>
+                        <div data-tab-panel-1 class="am-tab-panel ">
+                            <form action="{:url('/user/room/image')}" method="post" enctype="multipart/form-data">
+                                <div class="am-form-group ">
+                                    <ul>
+                                        <li class="am-text-sm ">上传课堂封面照片</li>
+                                        <li class="am-text-danger am-text-sm ">仅支持jpg/jpeg/png三种格式 ,且图片大小不得超过2M </li>
+                                        <li class=" am-text-sm">建议图片尺寸为:400*300</li>
+                                    </ul>
+                                    <input type="file"  multiple name="roomimage" class="am-form-field am-input-sm">
+                                </div>
+                                <div class="am-text-right am-form-group">
+                                    <button type="submit" class="am-btn am-btn-warning am-btn-sm">修改封面</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class=" am-form-group">
-                            <label for="" class="am-text-sm">描述:</label>
-                            <textarea  name="description" class="am-input-sm">{$userRoomInfo.description}</textarea>
-                        </div>
-                        <div class=" am-form-group am-text-right">
-                            <button type="submit" class="am-btn am-btn-warning am-btn-sm">修改</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -145,7 +174,12 @@
                     OBS串流设置图示:
                 </span>
                 <div class="am-u-md-12">
-                    <img src="__STATIC__/images/zb_desc.jpg" alt="推流说明" width="100%" class="am-img-responsive am-img-thumbnail">
+                    <figure data-am-widget="figure" class="am am-figure am-figure-default "   data-am-figure="{  pureview: 'true' }">
+                        <img src="__STATIC__/images/zb_desc.jpg" data-rel="__STATIC__/images/zb_desc.jpg" alt="OBS18.0软件直播设计图示" width="500px" class="am-img-thumbnail"/>
+                        <figcaption class="am-figure-capition-btm">
+                            OBS18.0软件直播设计图示(点击查看大图)
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
         </div>
@@ -155,11 +189,35 @@
         <hr data-am-widget="divider" style="" class="am-divider am-divider-dotted" />
         <div class="am-u-md-12  am-u-sm-12 ">
             <blockquote>
-                <span class="am-text-default am-sans-serif">申请教师认证后可以进行课堂直播</span>
+                <span class="am-text-default am-sans-serif am-block am-text-sm">申请教师认证后可以进行课堂直播</span>
+                <span class="am-text-default am-sans-serif am-text-danger am-block am-text-sm">* 教师认证申请需本人手持身份证正面照片</span>
+                <span class="am-text-default am-sans-serif am-block am-text-sm">提交申请后,我们将尽快联系您</span>
             </blockquote>
-            <form action="{:url('/user/zhubo')}" method="post">
+            {if condition="$userCheckFlag eq 1"}
+                <div class="am-panel">
+                    <span class="am-text-danger am-block am-text-sm">
+                       <em>您已经提交过申请,请耐心等待,我们将尽快处理.</em>
+                    </span>
+                    <span class=" am-text-sm">
+                        <span>提交时间: {$userCheckInfo['update_time']}</span>
+                    </span>
+                </div>
+            {else/}
+            <figure data-am-widget="figure" class="am am-figure am-figure-default "   data-am-figure="{  pureview: 'true' }">
+                <img src="__STATIC__/images/teacher/demo.png" data-rel="__STATIC__/images/teacher/demo.png" alt="手持身份证正面照示例" width="100px"/>
+                <figcaption class="am-figure-capition-btm">
+                    手持身份证正面照示例(点击查看大图)
+                </figcaption>
+            </figure>
+            <form action="{:url('/user/zhubo')}" method="post" enctype="multipart/form-data">
+                <div class="am-form-group ">
+                    <label for=""><span class="am-text-sm">上传手持身份证正面照</span> <span class="am-text-danger am-text-sm">( 仅支持jpg/jpeg/png三种格式 ,且图片大小不得大于2M )</span></label>
+                    <input type="file"  multiple name="image" class="am-form-field am-input-sm">
+                </div>
+
                 <button type="submit" class="am-btn am-btn-primary am-btn-sm">申请教师认证</button>
             </form>
+            {/if}
         </div>
     </div>
     {/if}

@@ -39,15 +39,17 @@
                 <li class=""><a href="{:url('/live/all')}">全部课程</a></li>
                 <li class=""><a href="{:url('/live/10000')}">播放示例</a></li>
             </ul>
-            <form class="am-topbar-form am-topbar-left am-form-inline am-form" role="search">
+            <form class="am-topbar-form am-topbar-left am-form-inline am-form" role="search" action="{:url('/live/search')}" method="post" id="searchForm">
                 <div class="am-form-group am-form-icon am-form-feedback">
-                    <input type="text" class="am-form-field am-input-sm nav-search-input" placeholder="搜索...">
-                    <span class="am-icon-search"></span>
+                        <input type="text" class="am-form-field am-input-sm nav-search-input" placeholder="搜索..." name="keyword">
+                        <span class="am-icon-search" onclick="submitSearch()"></span>
                 </div>
             </form>
             <div class="am-topbar-right" >
                 <div class="am-dropdown " data-am-dropdown>
                     {if condition="$userLoginFlag eq 1"}
+                    <a class=" am-btn am-btn-warning am-btn-sm am-round" title="我的收藏" href="{:url('/user/mycollection')}"><span class="am-icon-calendar-plus-o "></span></a>
+                    <a class=" am-btn am-btn-secondary am-btn-sm am-round" title="观看历史" href="{:url('/user/myhistory')}"><span class="am-icon-clock-o "></span></a>
                     <a href="javascript:void(0);" class="am-dropdown-toggle">
                         <img src="__STATIC__/images/headimgurl/{$userLoginInfo.headimgurl}" alt="" class="am-circle hvr-float-shadow" height="50px" width="50px">
                     </a>
@@ -107,5 +109,8 @@
     progress.set(0.6);
     progress.set(0.8);
     progress.done(true);
+    function submitSearch(){
+        $("#searchForm").submit();
+    }
 </script>
 </html>

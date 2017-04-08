@@ -30,7 +30,7 @@
 <div class="am-u-md-12 error-msg-alert">
     {if condition="$Think.session.err_msg neq '' "}
     {if condition="$Think.session.err_code eq 0 "}
-    <div class="am-alert am-animation-slide-top top-info-alert-box" data-am-alert>
+    <div class="am-alert am-animation-slide-top top-info-alert-box am-alert-success" data-am-alert>
         <button type="button" class="am-close">&times;</button>
         <p> {$Think.session.err_msg}</p>
     </div>
@@ -62,10 +62,10 @@
             <img src="__STATIC__/images/logo.png" alt="__TITLE__" class="room-left-box-logo">
         </a>
     </div>
-    <form class="am-u-md-12 am-u-lg-12 left-nav-search-form" role="search">
+    <form class="am-u-md-12 am-u-lg-12 left-nav-search-form" role="search" action="{:url('/live/search')}" method="post" id="searchForm">
         <div class="  am-form-group am-form-icon am-form-feedback">
-            <input type="text" class=" am-form-field am-input-sm left-nav-search-input" placeholder="搜索...">
-            <span class="am-icon-search"></span>
+            <input type="text" class=" am-form-field am-input-sm left-nav-search-input" placeholder="搜索..." name="keyword">
+            <span class="am-icon-search" onclick="submitSearch()"></span>
         </div>
     </form>
     <div class="left-type-box">
@@ -95,7 +95,7 @@
             <a href="{:url('/user/mycollection')}" class="am-btn am-btn-warning am-btn-sm user-link ">我的收藏</a>
         </div>
         <div class="left-user-logo user-btn-box am-text-center am-u-sm-6">
-            <a href="" class="am-btn am-btn-warning am-btn-sm user-link ">观看历史</a>
+            <a href="{:url('/user/myhistory')}" class="am-btn am-btn-warning am-btn-sm user-link ">观看历史</a>
         </div>
         {else /}
         <div class="am-u-sm-12 am-text-center no-login-box ">
@@ -114,6 +114,9 @@
     progress.set(0.6);
     progress.set(0.8);
     progress.done(true);
+    function submitSearch(){
+        $("#searchForm").submit();
+    }
 </script>
 </body>
 </html>

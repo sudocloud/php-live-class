@@ -5,6 +5,7 @@ use think\Cache;
 use think\Config;
 use think\Controller;
 use think\Db;
+use think\Request;
 use think\Session;
 
 class Index extends Controller
@@ -142,6 +143,27 @@ class Index extends Controller
                 break;
             }
         }
+        // 如果用户已经登录 && 直播间已经开启
+        // 则用户的观看历史就要写入或者更新,如果存在就更新update_time,如果不存在就insert
+        if(strlen($login_user)>0 && $roomInfo['status']==1){
+            // 存在登录的用户
+            // 查询history是否存在数据
+            $historyInfo=Db::name('userhistory')->where(['user'=>$login_user])->find();
+            $time=time();
+            if(count($historyInfo)==0){
+                // 用户没有观看过 直接插入
+                $dataArr=[
+                    'user'=>$login_user,
+                    'room'=>$id,
+                    'create_time'=>$time,
+                    'update_time'=>$time
+                ];
+                Db::name('userhistory')->insert($dataArr);
+            }else{
+                // 用户观看过,更新update_time
+                Db::name('userhistory')->where(['user'=>$login_user])->setField('update_time',$time);
+            }
+        }
         $this->assign('roomCollecitonFlag',$roomCollectionFlag);
         // 输出房间信息
         $this->assign('roomCollection',count($roomCollection));
@@ -168,6 +190,22 @@ class Index extends Controller
         // 输出信息
         $this->assign('cateInfo',$cateInfo);
         $this->assign('roomInfo', $roomInfo);
+        return $this->fetch();
+    }
+    /**
+     * 直播间的搜索
+     */
+    public function searchRoom(Request $request){
+        $keyword=trimAll($request->param('keyword','post'));
+        if(strlen($keyword)==0){
+            $this->redirect(url('/live'));
+        }
+        // 查询
+        $dbPrefix = Config::get('database.prefix');
+        $sql = "select user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room where  room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND room.name LIKE '%".$keyword."%' ORDER BY room.status desc , room.people desc ,room.update_time desc";
+        $searchInfo= Db::query($sql);
+        // 输出信息
+        $this->assign('roomInfo', $searchInfo);
         return $this->fetch();
     }
 }
