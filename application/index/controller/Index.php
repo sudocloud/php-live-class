@@ -148,7 +148,7 @@ class Index extends Controller
         if(strlen($login_user)>0 && $roomInfo['status']==1){
             // 存在登录的用户
             // 查询history是否存在数据
-            $historyInfo=Db::name('userhistory')->where(['user'=>$login_user])->find();
+            $historyInfo=Db::name('userhistory')->where(['user'=>$login_user,'room'=>$id])->find();
             $time=time();
             if(count($historyInfo)==0){
                 // 用户没有观看过 直接插入
