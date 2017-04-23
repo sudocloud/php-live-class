@@ -28,3 +28,6 @@ Route::rule('/regist/work'         ,'index/Login/registWork'            ,'POST')
 Route::rule('/login/passwprd'      ,'index/Login/forgetPassword'        ,'GET');
 Route::rule('/login/passwprd/work' ,'index/Login/forgetPasswordWork'    ,'POST');
 Route::rule('/login/logout'        ,'index/Login/logout'                ,'GET');
+
+// 房间部分
+Route::rule('/room/list'        ,'index/Index/roomList'                ,'GET');

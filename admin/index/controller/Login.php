@@ -41,8 +41,8 @@ class Login extends Controller
         }
         // 登录成功
         Session::set('loginadmin', $userInfo['guid']);
-        Session::set('loginflag', Config::get('login.flag'));
-        Session::set('logincheck', md5($userInfo['guid'] . Config::get('login.flag')));
+        Session::set('loginflag', Config::get('login.adminflag'));
+        Session::set('logincheck', md5($userInfo['guid'] . Config::get('login.adminflag')));
         Cache::set($userInfo['guid'], $userInfo);
         $this->redirect(url('/index'));
     }

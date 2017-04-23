@@ -1,4 +1,5 @@
 <?php
+
 namespace app\index\controller;
 
 use think\Controller;
@@ -7,12 +8,13 @@ use think\Session;
 use think\Cache;
 use think\Db;
 
-class Common extends Controller{
+class Acl extends Controller{
+
     public function _initialize(){
-// 获取登录状态信息
+        // 获取登录状态信息
         $guid = Session::get('loginadmin');
         $logincheck = Session::get('logincheck');
-        $checkCode = md5($guid.Config::get('login.flag'));
+        $checkCode = md5($guid.Config::get('login.adminflag'));
         if ($checkCode == $logincheck) {
             // 用户登录成功
             // 从缓存中读取用户的信息

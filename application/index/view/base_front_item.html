@@ -27,22 +27,38 @@
 
 </head>
 <body style="background-color: #F6F6F6">
-<div class="am-u-md-12 error-msg-alert">
-    {if condition="$Think.session.err_msg neq '' "}
-    {if condition="$Think.session.err_code eq 0 "}
-    <div class="am-alert am-animation-slide-top top-info-alert-box am-alert-success" data-am-alert>
+<div class="am-u-md-12 error-msg-alert" style="display: none;">
+    <div class="am-alert  top-info-alert-box am-alert-success" data-am-alert>
         <button type="button" class="am-close">&times;</button>
-        <p> {$Think.session.err_msg}</p>
+        <p class="top-info-alert-message"> </p>
     </div>
-    {/if}
-    {if condition="$Think.session.err_code eq 1 "}
-    <div class="am-alert am-animation-slide-top top-info-alert-box am-alert-danger" data-am-alert>
-        <button type="button" class="am-close">&times;</button>
-        <p> {$Think.session.err_msg}</p>
-    </div>
-    {/if}
-    {/if}
 </div>
+{if condition="$Think.session.err_msg neq '' "}
+{if condition="$Think.session.err_code eq 0 "}
+<script>
+    $(".top-info-alert-message").text("{$Think.session.err_msg}");
+    var topInfoAlertBox=$(".top-info-alert-box");
+    topInfoAlertBox.removeClass('am-alert-danger');
+    topInfoAlertBox.addClass('am-alert-success');
+    $(".error-msg-alert").fadeIn();
+    setTimeout(function(){
+        $(".error-msg-alert").fadeOut();
+    },3000);
+</script>
+{/if}
+{if condition="$Think.session.err_code eq 1 "}
+<script>
+    var topInfoAlertBox=$(".top-info-alert-box");
+    $(".top-info-alert-message").text("{$Think.session.err_msg}");
+    topInfoAlertBox.removeClass('am-alert-success');
+    topInfoAlertBox.addClass('am-alert-danger');
+    $(".error-msg-alert").fadeIn();
+    setTimeout(function(){
+        $(".error-msg-alert").fadeOut();
+    },3000);
+</script>
+{/if}
+{/if}
 <!--Common like alert-->
 <div class="am-modal am-modal-alert" tabindex="-1" id="alertBox">
     <div class="am-modal-dialog">

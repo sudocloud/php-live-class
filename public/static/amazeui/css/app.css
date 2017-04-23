@@ -4,6 +4,7 @@
     z-index: 999;
     text-align: center;
 }
+
 html body::-webkit-scrollbar-track
 {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -441,3 +442,9 @@ html body::-webkit-scrollbar-thumb
     box-shadow: 0 0 3px #dfdfdf;
 }
 /**用户信息资料的 css end **/
+
+.index-bar-btn{
+}
+.am-topbar-right .am-icon-btn{
+    margin-right:15px;
+}
