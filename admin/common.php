@@ -64,3 +64,13 @@ function create_guid()
         return strtolower($uuid);
     }
 }
+/**
+ * 删除所有空格,用户防止sql注入,将空格都干掉就不存在sql简单的注入了
+ * @param $str
+ * @return mixed
+ */
+function trimAll($str)
+{
+    $qian=array(" ","　","\t","\n","\r");$hou=array("","","","","");
+    return str_replace($qian,$hou,$str);
+}

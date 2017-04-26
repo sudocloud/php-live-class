@@ -52,7 +52,7 @@ class User extends Controller{
                     'status'=>0,
                     'msg'=>'请先登录'
                 ];
-                return json()->data($data);
+                echo json_encode($data);exit();
             }else{
                 $this->redirect(url('/login'));
             }
@@ -112,7 +112,7 @@ class User extends Controller{
         $this->assign('userZhuBoFlag',$userZhuBoFlag);
         // 如果主播,则查询出房间的信息
         $this->assign('userRoomInfo',$userRoomInfo);
-        // 不是主播,输出查询过的房间
+        // 不是主播 输出用户认证信息
         $this->assign('userCheckInfo',$userCheckInfo);
         $this->assign('userCheckFlag',$userCheckFlag);
         return $this->fetch();
@@ -318,30 +318,47 @@ class User extends Controller{
             $this->redirect(url('/user'));
         }
         // 查询是否提交过验证
-        $checkInfo=Db::name('userzhubocheck')->where(['user'=>$guid])->count();
-        if($checkInfo!=0){
+        $checkInfo=Db::name('userzhubocheck')->where(['user'=>$guid])->find();
+        if($checkInfo['status']==0){
             Session::flash('err_msg','已经提交过认证申请,请耐心等待');
             Session::flash('err_code',1);
             $this->redirect(url('/user'));
-        }
-        // 没有提交过,数据表添加字段
-        $time=time();
-        $dataArr=[
-            'user'=>$guid,
-            'image'=>$saveName,
-            'create_time'=>$time,
-            'update_time'=>$time,
-        ];
-        if(Db::name('userzhubocheck')->insert($dataArr)){
-            Session::flash('err_msg','成功提交认证申请,我们会尽快通过手机联系您!');
-            Session::flash('err_code',0);
-            $this->redirect(url('/user'));
+        }else if($checkInfo['status']==2){
+            // 提交失败 重新提交
+            $time=time();
+            $dataArr=[
+                'image'=>$saveName,
+                'update_time'=>$time,
+                'status'=>0
+            ];
+            if(DB::name('userzhubocheck')->where(['user'=>$guid])->update($dataArr)){
+                Session::flash('err_msg','成功提交认证申请,我们会尽快通过手机联系您!');
+                Session::flash('err_code',0);
+                $this->redirect(url('/user'));
+            }else{
+                Session::flash('err_msg','提交失败,请稍后重试');
+                Session::flash('err_code',1);
+                $this->redirect(url('/user'));
+            }
         }else{
-            Session::flash('err_msg','提交失败,请稍后重试');
-            Session::flash('err_code',1);
-            $this->redirect(url('/user'));
+            // 没有提交过,数据表添加字段
+            $time=time();
+            $dataArr=[
+                'user'=>$guid,
+                'image'=>$saveName,
+                'create_time'=>$time,
+                'update_time'=>$time,
+            ];
+            if(Db::name('userzhubocheck')->insert($dataArr)){
+                Session::flash('err_msg','成功提交认证申请,我们会尽快通过手机联系您!');
+                Session::flash('err_code',0);
+                $this->redirect(url('/user'));
+            }else{
+                Session::flash('err_msg','提交失败,请稍后重试');
+                Session::flash('err_code',1);
+                $this->redirect(url('/user'));
+            }
         }
-
     }
     /**
      * 用户的收藏列表
@@ -425,6 +442,34 @@ class User extends Controller{
                 // 插入失败
                 return json()->data(['code'=>400,'status'=>0,'msg'=>'收藏失败']);
             }
+        }
+    }
+    /**
+     * 举报房间
+     *
+     */
+    public function tipOff(Request $request){
+       $guid=Session::get('loginuser');
+        $roomGuid=$request->post('room');
+        if(Cache::get("tipoff_".$guid."_".$roomGuid)){
+            Session::flash('err_msg','已经对此课堂进行举报');
+            Session::flash('err_code',1);
+            $this->redirect(url('/live/'.$roomGuid));
+        }
+        // 写入
+        $time=time();
+        $dataArr=[
+            'user'=>$guid,
+            'room'=>$roomGuid,
+            'tipoff_time'=>$time,
+            'update_time'=>$time
+        ];
+        if(Db::name('usertipoff')->insert($dataArr)){
+            // 存10分钟
+            Cache::set("tipoff_".$guid."_".$roomGuid,600);
+            Session::flash('err_msg','成功举报,将尽快处理');
+            Session::flash('err_code',0);
+            $this->redirect(url('/live/'.$roomGuid));
         }
     }
 }

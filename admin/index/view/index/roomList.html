@@ -30,21 +30,17 @@
         <div class="tpl-block">
             <div class="am-g">
                 <div class="am-u-sm-12 am-u-md-3">
-                    <div class="am-form-group">
-                        <select data-am-selected="{btnSize: 'sm'}">
-                            <option value="option2">查看全部</option>
-                            <option value="option3">正在直播</option>
-                            <option value="option3">未直播</option>
-                            <option value="option3">收藏排序</option>
-                            <option value="option3">人数排序</option>
-                        </select>
+                    <div class="am-btn-group am-form-group">
+                        <a href="javascript:void(0);" class=" am-btn am-btn-default am-btn-warning am-btn-xs" onclick="togglePlayRoom(this,2);">全部</a>
+                        <a href="javascript:void(0);" class="am-btn  am-btn-default  am-btn-xs" onclick="togglePlayRoom(this,1);">直播中</a>
+                        <a href="javascript:void(0);"  class="am-btn am-btn-default am-btn-xs" onclick="togglePlayRoom(this,0)">未直播</a>
                     </div>
                 </div>
             </div>
             <div class="am-g">
                 <div class="tpl-table-images">
                     {volist name='allRoomInfo' id='item'}
-                    <div class="am-u-sm-12 am-u-md-3 am-u-lg-3">
+                    <div class="am-u-sm-12 am-u-md-3 am-u-lg-3 room-item-box" status="{$item.status}">
                         <div class="tpl-table-images-content">
                             <div class="tpl-table-images-content-i-time"><span class="am-text-lg">{$item.name}</span>
                                 <span class="am-icon-eye am-text-warning am-fr am-text-default"> {$item.people}</span></div>
@@ -63,7 +59,7 @@
                                 <hr>
                                 <div class="am-text-right">
                                     <span>
-                                        <a class=" am-btn am-btn-warning am-btn-sm" ><span class="am-icon-magic"></span> 查看详情</a>
+                                        <a class=" am-btn am-btn-warning am-btn-sm" href="{:url('/room',['info'=>$item.guid])}"><span class="am-icon-magic"></span> 查看详情</a>
                                     </span>
                                 </div>
                             </div>
@@ -82,6 +78,20 @@
     }
     function hideMask(obj){
         $(obj).children('.mask').fadeOut();
+    }
+    function togglePlayRoom(obj,flag){
+        $(obj).siblings().removeClass('am-btn-warning');
+        $(obj).addClass('am-btn-warning');
+        if(flag==1){
+            $(".room-item-box[status='"+flag+"']").fadeIn();
+            $(".room-item-box[status!='"+flag+"']").hide();
+        }else if(flag==0){
+            $(".room-item-box[status='"+flag+"']").fadeIn();
+            $(".room-item-box[status!='"+flag+"']").hide();
+        }else{
+            $(".room-item-box").fadeIn();
+        }
+        $.AMUI.progress.done(true);
     }
 </script>
 {/block}

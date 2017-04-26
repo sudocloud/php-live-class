@@ -118,19 +118,23 @@ class Index extends Controller
         // 查询房间信息
         // 房间的type名称也查出来。
         $dbPrefix = Config::get('database.prefix');
-        $sql = "select type.id as typeid ,type.name as type,user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room ,". $dbPrefix. "roomtype as roomtype,". $dbPrefix. "type as type where room.guid=? AND room.disable=0 AND zhubo.room=room.guid AND user.guid=zhubo.user AND roomtype.room=room.guid AND type.id=roomtype.type";
+        $sql = "select type.id as typeid ,type.name as type,user.nickname,user.guid as uid ,user.headimgurl , room.* from " . $dbPrefix . "user as user ," . $dbPrefix . "userzhubo as zhubo ," . $dbPrefix . "room as room ,". $dbPrefix. "roomtype as roomtype,". $dbPrefix. "type as type where room.guid=? AND zhubo.room=room.guid AND user.guid=zhubo.user AND roomtype.room=room.guid AND type.id=roomtype.type";
         // echo $sql;
         $roomInfo = Db::query($sql, [$id]);
         // 只选择第一条匹配的信息
         // dump($roomInfo);
         // 房间不存在返回主页
         if (count($roomInfo) == 0) {
-            $this->error('房间不存在', url('/'));
+            Session::flash('err_msg','房间不存在');
+            Session::flash('err_code',1);
+            $this->redirect(url('/'));
         }
         $roomInfo = $roomInfo[0];
         // 房间被封禁，返回主页
         if ($roomInfo['disable'] == 1) {
-            $this->error('该房间违反规定已经被封禁', url('/'));
+            Session::flash('err_msg','该房间违反规定已经被封禁');
+            Session::flash('err_code',1);
+            $this->redirect(url('/'));
         }
         // 查询房间订阅人数
         $roomCollection=Db::name('usercollection')->where(['room'=>$id])->select();

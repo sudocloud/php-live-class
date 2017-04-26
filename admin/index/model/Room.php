@@ -13,5 +13,8 @@ use think\Model;
 class Room extends Model{
     protected $name='room';
 
+//    protected function base($query){
+//        $query->where('disable',0);
+//    }
 }
 

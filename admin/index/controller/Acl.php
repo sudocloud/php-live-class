@@ -2,6 +2,8 @@
 
 namespace app\index\controller;
 
+use app\index\model\UserTipoff;
+use app\index\model\Userzhubocheck;
 use think\Controller;
 use think\Config;
 use think\Session;
@@ -32,6 +34,15 @@ class Acl extends Controller{
             $this->assign('userLoginInfo', $userInfo);
             // dump($userInfo);
             $this->assign('userLoginFlag', 1);
+            // 获取一些基本的信息
+            // 获取用户的认证申请
+            $userZhuboCheck=new Userzhubocheck();
+            $userZhuboCheckInfo=$userZhuboCheck->where(['status'=>0])->count();
+            $this->assign('userZhuboCheckInfo',$userZhuboCheckInfo);
+            // 获取违规举报信息
+            $userTipoff=new UserTipoff();
+            $userTipoffInfo=$userTipoff->count();
+            $this->assign('userTipoffInfo',$userTipoffInfo);
         } else {
             // 用户没有触发登录条件
             $this->redirect(url('/login'));

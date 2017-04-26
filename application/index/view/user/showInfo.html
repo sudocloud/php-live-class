@@ -193,16 +193,23 @@
                 <span class="am-text-default am-sans-serif am-text-danger am-block am-text-sm">* 教师认证申请需本人手持身份证正面照片</span>
                 <span class="am-text-default am-sans-serif am-block am-text-sm">提交申请后,我们将尽快联系您</span>
             </blockquote>
-            {if condition="$userCheckFlag eq 1"}
+            {if condition="$userCheckInfo.status eq 0"}
                 <div class="am-panel">
-                    <span class="am-text-danger am-block am-text-sm">
-                       <em>您已经提交过申请,请耐心等待,我们将尽快处理.</em>
-                    </span>
+                        <span class="am-text-danger am-block am-text-sm">
+                           <em>您已经提交过申请,请耐心等待,我们将尽快处理.</em>
+                        </span>
                     <span class=" am-text-sm">
-                        <span>提交时间: {$userCheckInfo['update_time']}</span>
-                    </span>
+                            <span>提交时间: {$userCheckInfo['update_time']}</span>
+                        </span>
                 </div>
             {else/}
+                {if condition="$userCheckInfo.status eq 2"}
+                    <div class="am-panel">
+                                <span class="am-text-danger am-block am-text-sm">
+                                   <em>您之前的申请已经被驳回,您可以重新提交申请.</em>
+                                </span>
+                    </div>
+                {/if}
             <figure data-am-widget="figure" class="am am-figure am-figure-default "   data-am-figure="{  pureview: 'true' }">
                 <img src="__STATIC__/images/teacher/demo.png" data-rel="__STATIC__/images/teacher/demo.png" alt="手持身份证正面照示例" width="100px"/>
                 <figcaption class="am-figure-capition-btm">

@@ -43,11 +43,13 @@
                         </span>
                         <span class="room-title-desc">人气：{$roomInfo.people}</span>
                     </div>
-                    <div class="am-u-md-6 am-u-lg-6  am-text-right no-padding-right">
-                        <button class="am-btn am-btn-default">
-                            <span class="am-icon-user-md"></span>
-                            <span>举报</span>
-                        </button>
+                    <div class="am-u-md-6 am-u-lg-6  am-text-right no-padding-right ">
+                           <span class="am-btn ">
+                                <form action="{:url('/user/tipoff')}" method="post">
+                                   <input type="hidden" name="room" value="{$roomInfo.guid}">
+                                   <button type="submit" class="am-btn am-btn-default " >举报</button>
+                                 </form>
+                           </span>
                         {if condition="$userLoginFlag eq 0"}
                                 <a class="am-btn am-btn-default" href="{:url('/login')}">
                                     <span>收藏：{$roomCollection}</span>

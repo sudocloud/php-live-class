@@ -16,8 +16,49 @@
     <link rel="stylesheet" href="__STATIC__/amazeui/css/hover.css">
     <link rel="stylesheet" href="__STATIC__/amazeui/css/app.css">
     {block name="other_head"}{/block}
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <script src="__STATIC__/amazeui/js/jquery.min.js"></script>
+    <!--<![endif]-->
+    <!--[if lte IE 8 ]>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="__STATIC__/amazeui/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="__STATIC__/amazeui/js/amazeui.min.js"></script>
 </head>
 <body style="background-color: #F6F6F6">
+<div class="am-u-sm-12 error-msg-alert am-text-center" style="display: none;z-index:9999;padding:0 0 0 0;width:100%;margin:0">
+    <div class="am-alert  top-info-alert-box am-alert-success" data-am-alert>
+        <button type="button" class="am-close">&times;</button>
+        <p class="top-info-alert-message"> </p>
+    </div>
+</div>
+{if condition="$Think.session.err_msg neq '' "}
+{if condition="$Think.session.err_code eq 0 "}
+<script>
+    $(".top-info-alert-message").text("{$Think.session.err_msg}");
+    var topInfoAlertBox=$(".top-info-alert-box");
+    topInfoAlertBox.removeClass('am-alert-danger');
+    topInfoAlertBox.addClass('am-alert-success');
+    $(".error-msg-alert").fadeIn();
+    setTimeout(function(){
+        $(".error-msg-alert").fadeOut();
+    },3000);
+</script>
+{/if}
+{if condition="$Think.session.err_code eq 1 "}
+<script>
+    var topInfoAlertBox=$(".top-info-alert-box");
+    $(".top-info-alert-message").text("{$Think.session.err_msg}");
+    topInfoAlertBox.removeClass('am-alert-success');
+    topInfoAlertBox.addClass('am-alert-danger');
+    $(".error-msg-alert").fadeIn();
+    setTimeout(function(){
+        $(".error-msg-alert").fadeOut();
+    },3000);
+</script>
+{/if}
+{/if}
 <header class="am-topbar " style="padding-top: 10px;padding-bottom: 10px;">
     <div class="am-container">
         <h1 class="am-topbar-brand">
@@ -92,15 +133,7 @@
         <p>XICP备XXXXX号</p>
     </div>
 </footer>
-<!--[if (gte IE 9)|!(IE)]><!-->
-<script src="__STATIC__/amazeui/js/jquery.min.js"></script>
-<!--<![endif]-->
-<!--[if lte IE 8 ]>
-<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
-<script src="__STATIC__/amazeui/js/amazeui.ie8polyfill.min.js"></script>
-<![endif]-->
-<script src="__STATIC__/amazeui/js/amazeui.min.js"></script>
+
 </body>
 <script>
     var progress = $.AMUI.progress;

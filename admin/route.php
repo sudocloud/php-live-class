@@ -31,3 +31,10 @@ Route::rule('/login/logout'        ,'index/Login/logout'                ,'GET');
 
 // 房间部分
 Route::rule('/room/list'        ,'index/Index/roomList'                ,'GET');
+Route::rule('/room/disable'        ,'index/Index/disableRoom'                ,'POST');
+Route::rule('/room/disable/open'        ,'index/Index/openDisableRoom'                ,'POST');
+Route::rule('/room/info/:id'        ,'index/Index/roomItem'                ,'GET');
+Route::rule('/room/check/list'        ,'index/Index/roomCheckList'                ,'GET');
+Route::rule('/room/check/success'        ,'index/Index/roomCheckSuccess'                ,'POST');
+Route::rule('/room/check/fail'        ,'index/Index/roomCheckFail'                ,'POST');
+Route::rule('/room/tipoff/list'        ,'index/Index/roomTipoffList'                ,'GET');

@@ -47,6 +47,7 @@ Route::rule('/user/myhistory'      ,'index/User/myHistory'              ,'GET');
 Route::rule('/user/zhubo'          ,'index/User/zhuboCheck'             ,'POST');
 Route::rule('/user/room/edit'      ,'index/User/editRoom'               ,'POST');
 Route::rule('/user/room/image'     ,'index/User/editRoomImage'          ,'POST');
+Route::rule('/user/tipoff'     ,'index/User/tipOff'          ,'POST');
 
 // 注册直播相关事件回调
 Route::rule('/on_publish'          ,'index/Rtmp/onPublish');         // 推流输出
