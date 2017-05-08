@@ -38,3 +38,9 @@ Route::rule('/room/check/list'        ,'index/Index/roomCheckList'              
 Route::rule('/room/check/success'        ,'index/Index/roomCheckSuccess'                ,'POST');
 Route::rule('/room/check/fail'        ,'index/Index/roomCheckFail'                ,'POST');
 Route::rule('/room/tipoff/list'        ,'index/Index/roomTipoffList'                ,'GET');
+
+// 用户部分
+Route::rule('/user/list'       ,'index/User/index'                ,'GET');
+Route::rule('/user/disable'       ,'index/User/disableList'                ,'GET');
+Route::rule('/user/disable'       ,'index/User/userDisable'                ,'POST');
+Route::rule('/user/info/:id'       ,'index/User/userItem'                ,'GET');

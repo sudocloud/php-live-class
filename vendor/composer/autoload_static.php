@@ -13,17 +13,31 @@ class ComposerStaticInit6ff6220ba1e94a5d15340134dea70848
     public static $prefixLengthsPsr4 = array (
         't' => 
         array (
+            'think\\worker\\' => 13,
             'think\\composer\\' => 15,
             'think\\captcha\\' => 14,
             'think\\' => 6,
+        ),
+        'W' => 
+        array (
+            'Workerman\\' => 10,
         ),
         'L' => 
         array (
             'Lcobucci\\JWT\\' => 13,
         ),
+        'G' => 
+        array (
+            'GatewayWorker\\' => 14,
+            'GatewayClient\\' => 14,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'think\\worker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-worker/src',
+        ),
         'think\\composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-installer/src',
@@ -36,9 +50,21 @@ class ComposerStaticInit6ff6220ba1e94a5d15340134dea70848
         array (
             0 => __DIR__ . '/../..' . '/thinkphp/library/think',
         ),
+        'Workerman\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/workerman',
+        ),
         'Lcobucci\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
+        ),
+        'GatewayWorker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/gateway-worker/src',
+        ),
+        'GatewayClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/gatewayclient',
         ),
     );
 

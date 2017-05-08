@@ -58,6 +58,11 @@ class Index extends Acl
         $guid=intval(trimAll($id));
         // 查询房间详细信息
         $roomInfo=Room::get(['guid'=>$guid]);
+        if(!$roomInfo){
+            Session::flash('err_msg','房间不存在');
+            Session::flash('err_code',1);
+            $this->redirect(url('/room/list'));
+        }
         // 查询收藏的人
         $roomCollectionInfo=Db::name('user')->alias('user')->join('usercollection zhubo','zhubo.room = "'.$guid.'" AND zhubo.user=user.guid')->select();
         // 查询主播信息

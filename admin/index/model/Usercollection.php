@@ -13,5 +13,8 @@ use think\Model;
 
 class Usercollection extends Model{
     protected $name='usercollection';
-
+    // 获取房间名
+    protected  function getRoomAttr($value){
+        return $value;
+    }
 }

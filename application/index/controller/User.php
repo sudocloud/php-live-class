@@ -98,7 +98,12 @@ class User extends Controller{
             $userCheckInfo=Db::name('userzhubocheck')->where(['user'=>$guid])->find();
             if(count($userCheckInfo)>0){
                 $userCheckInfo['update_time']=date('Y-m-d H:i:s',$userCheckInfo['update_time']);
-                $userCheckFlag=1;
+                if($userCheckInfo['status'] == 0){
+                    $userCheckFlag=2;
+                }else{
+                    $userCheckFlag=1;
+                }
+
             }else{
                 $userCheckFlag=0;
             }
@@ -319,11 +324,11 @@ class User extends Controller{
         }
         // 查询是否提交过验证
         $checkInfo=Db::name('userzhubocheck')->where(['user'=>$guid])->find();
-        if($checkInfo['status']==0){
+        if(count($checkInfo)>0 && $checkInfo['status']==0){
             Session::flash('err_msg','已经提交过认证申请,请耐心等待');
             Session::flash('err_code',1);
             $this->redirect(url('/user'));
-        }else if($checkInfo['status']==2){
+        }else if(count($checkInfo)>0 && $checkInfo['status']==2){
             // 提交失败 重新提交
             $time=time();
             $dataArr=[

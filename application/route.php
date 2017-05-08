@@ -13,6 +13,9 @@ use think\Route;
 
 Route::rule('/'                    ,'index/Index/index'                 ,'GET');
 Route::rule('/index'               ,'index/Index/index'                 ,'GET');
+Route::rule('/about'               ,'index/Index/about'                 ,'GET');
+Route::rule('/suggest'               ,'index/Index/suggest'                 ,'GET');
+Route::rule('/suggest'               ,'index/Index/suggestWork'                 ,'POST');
 
 // 注册视频播放
 Route::rule('/live/:id'            ,'index/Index/liveItem'              ,'GET');
@@ -22,6 +25,7 @@ Route::rule('/live/all/noplay'     ,'index/Index/liveAllNoPlay'         ,'GET');
 Route::rule('/live/search'         ,'index/Index/searchRoom'            ,'POST');
 
 // 注册分类相关
+Route::rule('/cate/all'            ,'index/Index/cateAll'               ,'GET');
 Route::rule('/cate/:id'            ,'index/Index/cateItem'              ,'GET');
 Route::rule('/cate'                ,'index/Index/liveAll'               ,'GET');
 
@@ -56,3 +60,7 @@ Route::rule('/on_play'             ,'index/Rtmp/onPlay');           // 播放
 Route::rule('/on_play_done'        ,'index/Rtmp/onPlayDone');       // 客户端播放结束
 Route::rule('/ffmpeg_photo'        ,'index/Rtmp/ffmpegPhoto');      // 截取视频流截图
 
+// 注册gateway相关事件
+Route::rule('/gateway/bind'          ,'index/GatewayServer/bind');         // 绑定
+Route::rule('/gateway/send'          ,'index/GatewayServer/send');         // 绑定
+Route::rule('/test'          ,'index/Test/index');         // 绑定

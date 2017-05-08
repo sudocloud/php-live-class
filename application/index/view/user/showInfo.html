@@ -19,10 +19,10 @@
             </div>
         </div>
         <div class="am-u-md-4 ">
-            <div class="am-u-md-12 logo-content">
+            <div class="am-u-md-12 logo-content" style="padding-top: 10px">
                 <img src="__STATIC__/images/headimgurl/{$userLoginInfo.headimgurl}" alt="{$userLoginInfo.nickname}头像" width="100px">
             </div>
-            <div class="am-u-md-12">
+            <div class="am-u-md-12" style="padding-top: 0">
                 <p>
                     昵称 : {$userLoginInfo.nickname}
                 </p>
@@ -186,14 +186,14 @@
     </div>
     {else /}
     <div class="col-md-12 user-room-content">
-        <hr data-am-widget="divider" style="" class="am-divider am-divider-dotted" />
-        <div class="am-u-md-12  am-u-sm-12 ">
+        <div class="am-u-md-12  am-u-sm-12" style="padding-left: 30px;padding-right: 30px;">
+            <div class=" " style="border: 1px solid #dfdfdf;padding:15px;box-shadow: 0 0 1px #ccc">
             <blockquote>
                 <span class="am-text-default am-sans-serif am-block am-text-sm">申请教师认证后可以进行课堂直播</span>
                 <span class="am-text-default am-sans-serif am-text-danger am-block am-text-sm">* 教师认证申请需本人手持身份证正面照片</span>
                 <span class="am-text-default am-sans-serif am-block am-text-sm">提交申请后,我们将尽快联系您</span>
             </blockquote>
-            {if condition="$userCheckInfo.status eq 0"}
+            {if condition="$userCheckFlag eq 2"}
                 <div class="am-panel">
                         <span class="am-text-danger am-block am-text-sm">
                            <em>您已经提交过申请,请耐心等待,我们将尽快处理.</em>
@@ -225,6 +225,7 @@
                 <button type="submit" class="am-btn am-btn-primary am-btn-sm">申请教师认证</button>
             </form>
             {/if}
+        </div>
         </div>
     </div>
     {/if}

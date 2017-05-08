@@ -24,6 +24,17 @@
     <script src="__STATIC__/amazeui/js/amazeui.ie8polyfill.min.js"></script>
     <![endif]-->
     <script src="__STATIC__/amazeui/js/amazeui.min.js"></script>
+    <script>
+        function changeMenuStatus(id){
+            var obj=$('#'+id);
+            console.log(obj.css('display'));
+            if(obj.css('display')=='block'){
+                return false;
+            }
+            $(".tpl-left-nav-sub-menu").css('display','none');
+            obj.css('display','block');
+        }
+    </script>
     <style>
         .tpl-content-wrapper{
             min-height:600px;
@@ -35,8 +46,8 @@
     {block name="other_head"}{/block}
 </head>
 <body data-type="index">
-<div class="am-u-sm-12 error-msg-alert am-text-center" style="display: none;z-index:9999;padding:0 0 0 0;width:100%;margin:0">
-    <div class="am-alert  top-info-alert-box am-alert-success" data-am-alert>
+<div class="am-u-sm-12 error-msg-alert am-text-center" style="display: none;z-index:9999;padding:0 0 0 0;width:100%;margin:0;opacity: .8">
+    <div class="am-alert  top-info-alert-box am-alert-secondary" data-am-alert style="opacity: .9999">
         <button type="button" class="am-close">&times;</button>
         <p class="top-info-alert-message"> </p>
     </div>
@@ -169,18 +180,14 @@
                     </a>
                     <ul class="tpl-left-nav-sub-menu" id="userMenuUl">
                         <li>
-                            <a href="table-font-list.html">
+                            <a href="{:url('/user/list')}">
                                 <i class="am-icon-angle-right"></i>
-                                <span>文字表格</span>
-                                <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                <span>用户列表</span>
                             </a>
 
-                            <a href="table-images-list.html">
+                            <a href="{:url('/user/disable')}">
                                 <i class="am-icon-angle-right"></i>
-                                <span>图片表格</span>
-                                <i class="tpl-left-nav-content tpl-badge-success">
-                                    18
-                                </i>
+                                <span>封禁列表</span>
 
                                 <a href="form-news.html">
                                     <i class="am-icon-angle-right"></i>
@@ -265,6 +272,7 @@
     progress.set(0.6);
     progress.set(0.8);
     progress.done(true);
+
 </script>
 <script src="__STATIC__/amazeui/js/app.js"></script>
 </html>

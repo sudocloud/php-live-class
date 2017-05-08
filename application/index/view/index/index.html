@@ -16,7 +16,7 @@
 <div class="am-container index-panel">
     <div class="  am-u-md-8 am-u-sm-12 ">
         <div class="index-panel-box">
-            <div class="am-u-sm-12 index-panel-box">
+            <div class="am-u-sm-12 index-panel-box" >
                 <div data-am-widget="titlebar" class="am-titlebar am-titlebar-default" >
                 <span class="am-titlebar-title ">
                     <span class="am-text-warning">正在直播的课程</span>
@@ -26,7 +26,7 @@
                     </nav>
                 </div>
             </div>
-            <div class="am-u-sm-12 index-panel-box">
+            <div class="am-u-sm-12 index-panel-box"  style="min-height: 400px;" >
                 <div class=" index-panel-box-content">
                     {volist name="zhiboRoomInfo" id="zb"}
                     <div class="am-u-md-4 am-u-sm-12">
@@ -64,7 +64,7 @@
                     热门
                 </span>
             </div>
-            <div class=" am-u-sm-12 index-panel-box-content" >
+            <div class=" am-u-sm-12 index-panel-box-content" style="height: 400px;" >
                 {volist name="topCollectonInfo" id="top"}
                      <div class="top-room-box ">
                         <span class="top-room-link hvr-forward">
@@ -81,7 +81,7 @@
                 {/volist}
             </div>
         </div>
-    </div>
+    </div >
 </div>
 <script>
     function showMask(obj){

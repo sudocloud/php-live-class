@@ -27,7 +27,7 @@
     <script src="__STATIC__/amazeui/js/amazeui.min.js"></script>
 </head>
 <body style="background-color: #F6F6F6">
-<div class="am-u-sm-12 error-msg-alert am-text-center" style="display: none;z-index:9999;padding:0 0 0 0;width:100%;margin:0">
+<div class="am-u-sm-12 error-msg-alert am-text-center" style="display: none;z-index:9999;padding:0 0 0 0;width:100%;margin:0;position: fixed;top:0;right:0;left: 0;">
     <div class="am-alert  top-info-alert-box am-alert-success" data-am-alert>
         <button type="button" class="am-close">&times;</button>
         <p class="top-info-alert-message"> </p>
@@ -77,7 +77,10 @@
         <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
             <ul class="am-nav am-nav-pills am-topbar-nav">
                 <li class=""><a href="{:url('/')}">首页</a></li>
-                <li class=""><a href="{:url('/live/all')}">全部课程</a></li>
+                <li class=""><a href="{:url('/live/all')}">所有课堂</a></li>
+                <li class=""><a href="{:url('/cate/all')}">全部分类</a></li>
+                <li class=""><a href="{:url('/about')}">关于</a></li>
+                <li class=""><a href="{:url('/suggest')}">反馈</a></li>
                 <li class=""><a href="{:url('/live/10000')}">播放示例</a></li>
             </ul>
             <form class="am-topbar-form am-topbar-left am-form-inline am-form" role="search" action="{:url('/live/search')}" method="post" id="searchForm">
@@ -103,7 +106,6 @@
                     <a>.</a>
                     <a class="am-btn am-btn-default am-topbar-btn am-btn-sm am-btn-secondary hvr-float" href="{:url('/regist')}">注册</a>
                     {/if}
-
                 </div>
             </div>
         </div>
@@ -111,16 +113,14 @@
 </header>
 
 {block name="content"}{/block}
-
-<footer class="am-footer am-footer-default"
-       >
-    <div class="am-footer-switch">
-    <span class="am-footer-ysp" data-rel="mobile">
+<footer class="am-footer am-footer-default am-container" style="margin-top:40px;background-color: #f6f6f6;padding-bottom: 5px;">
+    <div class="am-footer-switch " style="border-top:dotted 1px #cccccc;padding-top:20px;">
+    <span class="am-footer-ysp am-text-small" data-rel="mobile">
         <a  href="javascript:;">
           直播课堂
         </a>
     </span>
-        <span class="am-footer-divider"> | </span>
+        <span class="am-footer-divider am-text-small"> | </span>
         <a  href="javascript:;">
             <span class="am-text-warning">
                 Live Class

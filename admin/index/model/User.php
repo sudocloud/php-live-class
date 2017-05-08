@@ -14,7 +14,16 @@ use think\Model;
 class User extends Model{
     protected $name='user';
     protected function base($query){
-        $query->where('status',1);
+        // $query->where('status',1);
+    }
+    protected function getSexAttr($value){
+        if($value==1){
+            return '男';
+        }else if($value == 2){
+            return '女';
+        }else{
+            return '未知';
+        }
     }
 }
 

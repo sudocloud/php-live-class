@@ -19,7 +19,10 @@
     "php": ">=5.4.0",
     "topthink/framework": "^5.0",
     "topthink/think-captcha": "^1.0",
-    "lcobucci/jwt": "^3.2"
+    "lcobucci/jwt": "^3.2",
+    "workerman/gateway-worker": "^3.0",
+    "topthink/think-worker": "^1.0",
+    "workerman/gatewayclient": "^3.0"
   },
   "extra": {
     "think-path": "thinkphp"

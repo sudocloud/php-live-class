@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 
+use app\index\model\Type;
 use think\Cache;
 use think\Config;
 use think\Controller;
@@ -211,5 +212,31 @@ class Index extends Controller
         // 输出信息
         $this->assign('roomInfo', $searchInfo);
         return $this->fetch();
+    }
+    /**
+     * 查看所有的分类
+     */
+    public function cateAll(){
+        $typeList=Type::all();
+        $this->assign('cateList',$typeList);
+        return $this->fetch();
+    }
+    /**
+     * 关于界面
+     */
+    public function about(){
+       return $this->fetch();
+    }
+    /**
+     * 提交反馈的界面
+     */
+    public function suggest(){
+        return $this->fetch();
+    }
+    /**
+     * 提交反馈的处理
+     */
+    public function suggestWork(Request $request){
+
     }
 }
