@@ -38,7 +38,7 @@ class Login extends Controller
         $passwordCode = md5($password);
         // 用户被封禁
         if ($userInfo['status'] == 0) {
-            $this->error('用户被封禁');
+            $this->error('登录失败');
         }
         // 用户不存在
         if (count($userInfo) == 0 || $passwordCode != $userInfo['password']) {
@@ -186,22 +186,6 @@ class Login extends Controller
             ];
             return json()->data($data);
         }
-    }
-
-    /**
-     * 忘记密码页面
-     */
-    public function forgetPassword()
-    {
-
-    }
-
-    /**
-     * 忘记密码表单处理
-     */
-    public function forgetPasswordWork()
-    {
-
     }
 
     /**

@@ -245,6 +245,9 @@ class User extends Controller{
          }
      }
 
+    /**
+     * 上传房间封面
+     */
      public function editRoomImage(){
          // 获取表单上传文件 例如上传了001.jpg
          $file = request()->file('roomimage');

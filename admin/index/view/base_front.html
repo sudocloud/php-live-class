@@ -142,14 +142,12 @@
                                 <span>课堂列表</span>
                                 <i class="am-icon-list tpl-left-nav-content-ico am-fr am-margin-right"></i>
                             </a>
-
-                            <a href="{:url('/room/check/list')}">
+                            <a href="{:url('/cate/list')}">
                                 <i class="am-icon-angle-right"></i>
-                                <span>认证申请</span>
-                                <i class="tpl-left-nav-content tpl-badge-success">
-                                    {$userZhuboCheckInfo}
-                                </i>
+                                <span>课堂分类</span>
+                                <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
                             </a>
+
 
                                 <a href="{:url('/room/tipoff/list')}">
                                     <i class="am-icon-angle-right"></i>
@@ -175,7 +173,13 @@
                                 <i class="am-icon-users  tpl-left-nav-more-ico am-fr am-text-xs am-text-primary">
                                 </i>
                             </a>
-
+                            <a href="{:url('/room/check/list')}">
+                                <i class="am-icon-angle-right"></i>
+                                <span>认证申请</span>
+                                <i class="tpl-left-nav-content tpl-badge-success">
+                                    {$userZhuboCheckInfo}
+                                </i>
+                            </a>
                             <a href="{:url('/user/disable')}">
                                 <i class="am-icon-angle-right"></i>
                                 <span>封禁列表</span>
@@ -194,11 +198,7 @@
                     </a>
                     <ul class="tpl-left-nav-sub-menu" id="systemMenuUl">
                         <li>
-                            <a href="{:url('/cate/list')}">
-                                <i class="am-icon-angle-right"></i>
-                                <span>课堂分类</span>
-                                <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
-                            </a>
+
 
                             <a href="{:url('/suggest/list')}">
                                 <i class="am-icon-angle-right"></i>
